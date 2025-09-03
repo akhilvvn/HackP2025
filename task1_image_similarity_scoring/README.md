@@ -15,7 +15,7 @@ The goal is to evaluate how well different similarity measures perform under com
 
 ## Project Structure
 
-image_similarity_scoring/
+task1_image_similarity_scoring/
 │── README.md
 │── requirements.txt
 │── similarity_scoring.py
@@ -160,4 +160,3 @@ Integration with FAISS for large-scale image search.
 ## Author
 
 **Akhil V Nair** – HackP 2025
-
