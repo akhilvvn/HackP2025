@@ -1,0 +1,16 @@
+Image,PredictedClass
+hotel1.jpg,hotel
+hotel2.jpg,hotel
+hotel3.jpg,hotel
+hospital1.jpg,indoor
+library1.jpg,indoor
+ward1.jpg,indoor
+highway1.jpg,outdoor
+scenery1.jpg,outdoor
+street1.webp,outdoor
+park1.jpg,park
+park2.jpg,park
+park3.jpg,park
+restaurant1.jpg,restaurant
+restaurant2.jpg,restaurant
+restaurant3.jpg,restaurant
