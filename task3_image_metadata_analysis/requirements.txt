@@ -1,0 +1,6 @@
+pillow==10.3.0
+exifread==3.0.0
+pandas==2.2.2
+matplotlib==3.9.0
+pytesseract==0.3.10
+langid==1.1.6
