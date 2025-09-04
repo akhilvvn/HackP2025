@@ -63,7 +63,9 @@ Ensure it is available in your PATH or update the script with the correct Tesser
 ```
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 
-Linux
+```
+
+**Linux**
 
 ```
 
@@ -71,7 +73,7 @@ sudo apt install tesseract-ocr
 
 ```
 
-Mac
+**Mac**
 
 ```
 
