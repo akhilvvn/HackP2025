@@ -100,17 +100,17 @@ From `predictions.csv`:
 
 ### Observations
 
-All classes (hotel, indoor, outdoor, park, restaurant) achieved 100% accuracy on the current test set. 
+**All classes (hotel, indoor, outdoor, park, restaurant) achieved 100% accuracy on the current test set**
 
-Weighted loss and oversampling helped balance minority classes.
+**Weighted loss and oversampling helped balance minority classes**
 
-Layer4 fine-tuning enabled the pretrained ResNet18 to adapt effectively to the small dataset.
+**Layer4 fine-tuning enabled the pretrained ResNet18 to adapt effectively to the small dataset**
 
-Generic augmentation improved generalization without adding complexity.
+**Generic augmentation improved generalization without adding complexity**
 
-Early stopping prevented overfitting.
+**Early stopping prevented overfitting**
 
-While the current results are perfect, a larger and more diverse dataset is needed to ensure robust performance and better generalization on unseen images.
+**While the current results are perfect, a larger and more diverse dataset is needed to ensure robust performance and better generalization on unseen images**
 
 ---
 
