@@ -120,7 +120,7 @@ if MODE == "train":
         else:
             no_improve += 1
             if no_improve >= patience:
-                print("Early stopping: no improvement for {patience} epochs")
+                print(f"Early stopping: no improvement for {patience} epochs")
                 break
 
     print(f"Training complete. Best accuracy: {best_accuracy:.4f}")

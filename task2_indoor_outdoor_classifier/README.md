@@ -110,7 +110,7 @@ From `predictions.csv`:
 
 **Early stopping prevented overfitting**
 
-**While the current results are perfect, a larger and more diverse dataset is needed to ensure robust performance and better generalization on unseen images**
+**While the current results are perfect, a larger and more diverse dataset is needed to ensure robust performance, avoid confusion for visually similar images, and improve generalization on unseen images**
 
 ---
 
