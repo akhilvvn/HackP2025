@@ -8,6 +8,8 @@ This project extracts and analyzes metadata from images, including EXIF/IPTC fie
 - **Automatic language detection of extracted text**
 - **Clickable Google Maps links for GPS metadata**
 - **Visualization of image properties and EXIF presence**
+- **Interactive GUI for real-time analysis**
+- **Downloadable metadata in CSV and JSON formats**
 
 The goal is to explore what information can be pulled from an image’s metadata and infer extra context (such as hidden camera details, text content, language, and location) to assist in digital forensics and authenticity verification.
 
@@ -20,12 +22,8 @@ task3_image_metadata_analysis/
 │── requirements.txt
 │── metadata_extractor.py
 │── samples/
-│   └── images/              
-│── outputs/
-    ├── metadata.csv          
-    ├── metadata.json         
-    ├── report.html           
-    └── plots/                
+│   └── images/
+             
 ---
 
 ## Installation
@@ -85,22 +83,25 @@ brew install tesseract
 
 ## Usage
 
-Run the extractor on all images inside samples/images/:
-```
-
-python metadata_extractor.py
+Run the Streamlit app:
 
 ```
 
-### Outputs will be saved in the outputs/ folder:
+streamlit run metadata_extractor.py
 
-metadata.csv → Extracted metadata in CSV format
+```
 
-metadata.json → Extracted metadata in JSON format
+---
 
-report.html → Interactive HTML report with plots and metadata table
+## Outputs
 
-plots/ → Visualization of image statistics
+Interactive metadata table displayed in the app
+
+Download options: CSV and JSON formats for all extracted metadata
+
+Inline visualizations: image format distribution, file size distribution, top resolutions, and EXIF presence
+
+Missing data is displayed as Not available for clarity.
 
 ---
 
@@ -151,15 +152,17 @@ Metadata absence in some images (e.g., PNG, screenshots) confirms common practic
 
 ## Possible Extensions
 
-Deeper Metadata Parsing: Add IPTC, XMP, and ICC profile extraction for richer forensic insights.
+Deeper Metadata Parsing: Extend support to extract IPTC, XMP, and ICC profile data for richer forensic insights.
 
-Tampering Detection: Detect editing/manipulation by analyzing inconsistencies in EXIF or compression signatures.
+Tampering Detection: Analyze inconsistencies in EXIF or compression signatures to detect edited or manipulated images.
 
-Reverse Geocoding: Convert GPS coordinates into actual place names using a geocoding API.
+Reverse Geocoding: Convert GPS coordinates into human-readable locations (city, country) using geocoding APIs.
 
-EXIF Timeline Analysis: Reconstruct chronological timelines across multiple images.
+EXIF Timeline Analysis: Reconstruct chronological timelines across multiple images to track event sequences.
 
-Web/Cloud Deployment: Package as a Streamlit dashboard or lightweight web API for practical forensic use.
+Enhanced OCR & Context Analysis: Support multi-language detection, handwriting recognition, or entity extraction from text within images.
+
+Batch Analysis & Reporting: Enable bulk image uploads with interactive filtering, sorting, and downloadable summary reports.
 
 ---
 

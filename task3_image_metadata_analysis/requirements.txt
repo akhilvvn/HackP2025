@@ -1,6 +1,7 @@
-pillow==10.3.0
+streamlit==1.26.1
+pandas==2.1.1
+Pillow==10.1.0
 exifread==3.0.0
-pandas==2.2.2
-matplotlib==3.9.0
-pytesseract==0.3.10
+pytesseract==0.4.2
+matplotlib==3.8.1
 langid==1.1.6
