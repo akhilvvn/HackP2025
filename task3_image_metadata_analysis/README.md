@@ -2,7 +2,7 @@
 
 ## Task Description
 
-This project extracts and analyzes metadata from images, including EXIF/IPTC fields, GPS location, OCR-based text extraction, and language detection. It provides structured outputs in CSV/JSON formats and generates an interactive HTML report with metadata tables, OCR results, and clickable Google Maps links for images containing GPS coordinates. Additional implemented:
+This project extracts and analyzes metadata from images, including EXIF/IPTC fields, GPS location, OCR-based text extraction, and language detection. It provides structured outputs in CSV/JSON formats and generates an interactive HTML report with metadata tables, OCR results, and clickable Google Maps links for images containing GPS coordinates. Additional features implemented:
 
 - **OCR text extraction with Tesseract**
 - **Automatic language detection of extracted text**
