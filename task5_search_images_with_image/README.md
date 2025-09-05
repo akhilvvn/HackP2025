@@ -23,8 +23,8 @@ HackP2025/
 │   ├── requirements.txt
 │   ├── image_search.py
 │   ├── samples/
-│   │   ├── dataset/        # ~50 animal images
-│   │   └── queries/        # optional test input images
+│   │   ├── dataset/          # ~50 animal images
+│   │   └── sample_queries/   # optional test input images
 │   └── outputs/
 │       ├── results.csv     # top matches for each query
 │       └── previews/       # side-by-side preview images
