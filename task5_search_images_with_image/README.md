@@ -24,7 +24,7 @@ HackP2025/
 │   ├── image_search.py
 │   ├── samples/
 │   │   ├── dataset/          # ~50 animal images
-│   │   └── sample_queries/   # optional test input images
+│   │   └── sample_queries/   # sample test input images
 │   └── outputs/
 │       ├── results.csv     # top matches for each query
 │       └── previews/       # side-by-side preview images

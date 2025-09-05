@@ -25,7 +25,7 @@ HackP2025/
 │   ├── text_search.py
 │   ├── samples/
         │── sample_queries.txt    # sample search queries
-│   │   └── dataset/             # ~50 animal images
+│   │   └── dataset/              # ~50 animal images
 │   └── outputs/
 │       ├── results.csv     # top matches for each query
 │       └── previews/       # result preview images
