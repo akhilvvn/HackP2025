@@ -8,9 +8,10 @@ This project implements a text-to-image search using **OpenAI's CLIP model**. Gi
 - **Cosine similarity for ranking results**
 - **Similarity thresholding**
 - **Clustering to filter out unrelated images**
-- **Preview generation of top matches**
 - **Saves top matches along with similarity scores in `results.csv`**
+- **Streamlit implementation for interactive search**
 - **Supports GPU acceleration if available**
+- **Caching of embeddings and clusters for faster subsequent runs**
 
 The goal is to enable natural language search on an image collection without explicit labeling or training, providing an interactive way to explore images semantically.
 
@@ -23,12 +24,12 @@ HackP2025/
 │   ├── README.md
 │   ├── requirements.txt
 │   ├── text_search.py
+│   ├── embeddings/             # cached embeddings and clusters
+│   │   ├── image_embeddings.npy
+│   │   └── clusters.npz
 │   ├── samples/
-        │── sample_queries.txt    # sample search queries
+│   │   ├── sample_queries.txt    # sample search queries
 │   │   └── dataset/              # ~50 animal images
-│   └── outputs/
-│       ├── results.csv     # top matches for each query
-│       └── previews/       # result preview images
 
 ---
 
@@ -43,6 +44,7 @@ It is recommended to use a **virtual environment**.
 ```
 python3 -m venv venv
 source venv/bin/activate
+
 ```
 
 **On Windows**
@@ -50,6 +52,7 @@ source venv/bin/activate
 ```
 python -m venv venv
 .\venv\Scripts\activate
+
 ```
 
 # Install dependencies
@@ -60,22 +63,29 @@ pip install -r requirements.txt
 
 ## Usage
 
-Run the search script on all images inside samples/dataset/:
-```
-
-python text_search.py
+Run the search script on all images inside `samples/dataset/` using Streamlit:
 
 ```
 
-You will be prompted to enter text queries (eg. lion, crow, turtle etc.) Type `'exit'` to quit.
+streamlit run text_search.py
 
-Note: The first run may take a few minutes depending on the dataset size and your hardware, because the script computes embeddings for all dataset images. On the first run, the pretrained CLIP model and processor will be downloaded from the internet. Subsequent runs will be faster as the model and embeddings are cached locally.
+```
 
-### Outputs will be saved in the outputs/ folder:
+This will open an interactive web interface in your browser where you can:
 
-results.csv → Ranked top matches for each query along with similarity scores
+- Enter text queries (e.g., lion, crow, turtle, etc.)
 
-previews/ → Top matching images copied into per-query subfolders
+- Adjust the similarity threshold slider
+
+- Set the maximum number of results per query
+
+- View top matching images directly in the interface
+
+- Download the results as `results.csv`
+
+Type `'exit'` in the query box to stop entering new queries.
+
+Note: The first run may take a few minutes depending on the dataset size and your hardware, because the script computes embeddings for all dataset images and performs clustering. On the first run, the pretrained CLIP model and processor will also be downloaded from the internet. Subsequent runs will be faster as **embeddings and clusters are cached locally in `embeddings/`**.
 
 ---
 
@@ -83,29 +93,21 @@ previews/ → Top matching images copied into per-query subfolders
 
 From `results.csv`:
 
-| Query   | Rank | Filename        | Similarity |
-| ------- | ---- | --------------- | ---------- |
-| lion    | 1    | 4dbdd0fea8.jpg  | 0.294      |
-| lion    | 2    | 5fb837c61b.jpg  | 0.297      |
-| dog     | 1    | 4aacd195b5.jpg  | 0.264      |
-| dog     | 2    | 7c43d5ca9e.jpg  | 0.256      |
-| cat     | 1    | 71756f7bd0.jpg  | 0.261      |
-| cat     | 2    | 83e8a824a2.jpg  | 0.279      |
-| tiger   | 1    | 2c75c39ece.jpg  | 0.266      |
-| turtle  | 1    | 0a47b7d021.jpg  | 0.276      |
-| turtle  | 2    | 0fe508ab40.jpg  | 0.280      |
-| dolphin | 1    | 2dab1e3035.jpg  | 0.277      |
-| crow    | 1    | 1d15117ae2.jpg  | 0.308      |
-
+| Query  | Rank | Filename        | Similarity |
+| ------ | ---- | --------------- | ---------- |
+| turtle | 1    | 0a47b7d021.jpg  | 0.276076   |
+| turtle | 2    | 0fe508ab40.jpg  | 0.280161   |
 
 ---
 
 ### Observations
 
 - **Small dataset:** Limited images per class limits retrieval diversity.
-- **Similarity threshold:** Set to optimal to reduce irrelevant matches.
-- **CLIP embeddings:** Despite a small dataset, semantic matching works reasonably well.
+- **Similarity threshold:** Optimally set to reduce irrelevant matches.
+- **CLIP embeddings:** Semantic matching works well despite the small dataset.
 - **Top matches:** All results above the threshold generally correspond to the correct species.
+- **Caching:** Embeddings and clusters are cached in `embeddings/` to speed up subsequent runs.
+- **Streamlit UI:** Provides an interactive search interface with instant download of results.
 - **Limitations:** Similar animals (e.g., lion, tiger, leopard) can appear together due to embedding similarity.
 
 While current results are satisfactory, a **larger and more diverse dataset** is needed to ensure robust performance and better generalization.
@@ -114,15 +116,17 @@ While current results are satisfactory, a **larger and more diverse dataset** is
 
 ## Possible Extensions
 
-Increase dataset size for further robustness.
+Increase dataset size for greater retrieval diversity and robustness.
 
 Fine-tune or adapt CLIP on your dataset for higher accuracy.
 
 Gradually unfreeze CLIP layers or train adapters for few-shot learning.
 
-Post-processing: filtering and ranking to remove low-confidence or redundant matches.
+Implement additional post-processing: filtering and ranking to remove low-confidence or redundant matches.
 
-Deploy the search interface as a web or desktop application.
+Enhance the Streamlit UI with features like query history, similarity visualization, or dynamic clustering.
+
+Package and deploy the Streamlit app for easy access, either as a web app or a standalone desktop app.
 
 ---
 

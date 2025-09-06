@@ -2,15 +2,16 @@
 
 ## Task Description
 
-This project classifies images into five categories: hotel, indoor, outdoor, park, and restaurant using deep learning. The classifier uses ResNet18 and is designed to work well even on a small dataset. Key features:
+This project classifies images into five categories: **hotel, indoor, outdoor, park, and restaurant** using deep learning. The classifier uses **ResNet18** and is designed to work well even on small datasets. Key features:
 
 - **Layer4 + fully connected layer fine-tuning**
 - **Weighted loss to handle class imbalance**
-- **Data augmentation (flips, rotations, crops, color jitter)**
-- **Early stopping to prevent overfitting**
-- **Best model saving for reliable inference**
+- **Data augmentation** (random flips, rotations, crops, color jitter)
+- **Early stopping** to prevent overfitting
+- **Best model saving** for reliable inference
+- **Streamlit-based UI** for single image and batch test evaluation
 
-The goal is to achieve high per-class accuracy and provide confusion matrices for evaluation.
+The goal is to achieve high per-class accuracy, provide confusion matrices, and allow easy predictions on new images.
 
 ---
 
@@ -57,25 +58,36 @@ pip install -r requirements.txt
 
 ## Usage
 
-For training the model: Trains the model with fine-tuning, weighted loss, and oversampling. Saves the best model automatically.
+**For training the model**: Trains the model with fine-tuning, weighted loss, and oversampling. Saves the best model automatically.
+
 ```
 
 python classifier.py --mode train
 
 ```
 
-For running inference: Loads the best saved model. Predicts classes for test images and saves outputs and confusion matrix.
-```
-
-python classifier.py --mode inference
+**Run CLI inference**: Loads the best saved model. Predicts classes for test images and saves outputs and confusion matrix.
 
 ```
+
+python classifier.py --mode cli
+
+```
+
+**Launch Streamlit UI**: Provides a user-friendly interface for training, single image classification, and batch evaluation.
+
+```
+
+streamlit run classifier.py
+
+```
+
 
 ### Outputs will be saved in the outputs/ folder:
 
 predictions.csv → Predicted class for each test image
 
-plots/ → Confusion matrix of predictions
+plots/ → Confusion matrix plots
 
 ---
 
@@ -110,6 +122,8 @@ From `predictions.csv`:
 
 **Early stopping prevented overfitting**
 
+**Streamlit UI enables interactive classification and evaluation**
+
 **While the current results are perfect, a larger and more diverse dataset is needed to ensure robust performance, avoid confusion for visually similar images, and improve generalization on unseen images**
 
 ---
@@ -122,7 +136,7 @@ Model: Gradually unfreeze layer3 → finer feature learning.
 
 Advanced learning methods: Few-shot or metric learning → handle very small datasets efficiently.
 
-Deployment: Web/desktop app → makes the model usable in real scenarios.
+UI Enhancements: Improve the Streamlit interface → better visualization of predictions, confidence scores, and evaluation metrics.
 
 
 ## Author

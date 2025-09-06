@@ -8,6 +8,7 @@ This task compares an original image with its altered versions (rotated, resized
 - **dHash (Difference Hash)**
 - **SSIM (Structural Similarity Index)**
 - **ORB Feature Matching (OpenCV)**
+- **Streamlit Implementation:** Provides an interactive interface where users can upload an image, adjust alteration parameters (rotation, resizing, grayscale, flips), view side-by-side comparisons, see ORB keypoint matches, track cumulative results in session state, and export all similarity scores as a CSV.
 
 The goal is to evaluate how well different similarity measures perform under common distortions.
 
@@ -23,10 +24,9 @@ task1_image_similarity_scoring/
 │   ├── original/
 │   └── altered/
 │── outputs/
-    ├── scores.csv        # Best-match
-    ├── scores_full.csv   # All comparisons
-    ├── plots/
-    └── orb_matches/
+    ├── scores.csv        # Best-match per alteration
+    ├── scores_full.csv   # All comparisons for uploaded images
+    └── orb_matches/      # ORB keypoint match diagrams
 
 ---
 
@@ -41,6 +41,7 @@ It is recommended to use a **virtual environment**.
 ```
 python3 -m venv venv
 source venv/bin/activate
+
 ```
 
 **On Windows**
@@ -48,6 +49,7 @@ source venv/bin/activate
 ```
 python -m venv venv
 .\venv\Scripts\activate
+
 ```
 
 # Install dependencies
@@ -58,9 +60,14 @@ pip install -r requirements.txt
 
 ## Usage
 
+**CLI Mode**
+
 Run the similarity scoring script:
 
+```
 python similarity_scoring.py
+
+```
 
 ### Outputs will be saved in the outputs/ folder:
 
@@ -68,9 +75,28 @@ scores.csv → Best match per altered image
 
 scores_full.csv → All original vs altered comparisons
 
-plots/ → Side-by-side image comparisons with scores
-
 orb_matches/ → ORB keypoint match diagrams
+
+
+**Streamlit UI Mode**
+
+```
+streamlit run similarity_scoring.py streamlit
+
+```
+This will open an interactive web interface in your browser where you can:
+
+Upload an original image.
+
+Adjust alteration parameters: Rotation angle (0–360°), Resize percentage (10–200%), Grayscale conversion, Horizontal or vertical flip
+
+View side-by-side comparison of the original and altered image.
+
+See ORB keypoint match visualization.
+
+Track all similarity scores in session state across multiple alterations.
+
+Export all results as similarity_scores.csv
 
 ---
 
@@ -90,6 +116,17 @@ From `scores.csv`:
 | tree.jpg     | tree-contrasted.jpg    | 0.94  | 0.95  | 0.91 | 0.96 |
 | board.jpg    | board-b\&w\.jpg        | 1.00  | 0.95  | 0.96 | 0.99 |
 | cat.jpg      | cat-blurred.jpg        | 0.97  | 1.00  | 0.49 | 0.67 |
+
+From `similarity_scores.csv`:
+
+| Altered                    | pHash   | dHash   | SSIM      | ORB   |
+|----------------------------|--------|--------|-----------|---------|
+| Rotation:0, Resize:100     | 1.0000 | 1.0000 | 1.0000    | 1.0000  |
+| Rotation:1, Resize:100     | 0.9063 | 0.9688 | 0.3505    | 0.9738  |
+| Rotation:10, Resize:100    | 0.6875 | 0.8906 | 0.2429    | 0.9421  |
+| Rotation:17, Resize:100    | 0.6250 | 0.7656 | 0.2111    | 0.9468  |
+| Rotation:17, Resize:100, Gray | 0.6250 | 0.7656 | 0.2111 | 0.9468  |
+| Rotation:17, Resize:100, Gray, VFlip | 0.5313 | 0.6094 | 0.1705 | 0.5274 |
 
 ---
 
@@ -150,7 +187,7 @@ SSIM is useful for compression/contrast detection but not geometric distortions.
 
 ## Possible Extensions
 
-CLIP embeddings for semantic similarity.
+CLIP embeddings for semantic similarity detection.
 
 Heatmap visualization of similarity matrices.
 

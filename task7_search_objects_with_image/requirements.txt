@@ -1,0 +1,9 @@
+torch
+torchvision
+ultralytics
+sentence-transformers
+scikit-learn
+numpy
+pillow
+streamlit
+pandas
