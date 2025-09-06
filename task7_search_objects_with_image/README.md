@@ -95,7 +95,7 @@ streamlit run app.py
 
 ```
 
-- Upload one or multiple images (jpg, jpeg, png)
+- Upload the query image (jpg, jpeg, png)
   
 - The app automatically detects objects in the query image 
  
