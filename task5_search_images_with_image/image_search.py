@@ -30,7 +30,7 @@ for path in image_paths:
 import numpy as np
 image_embeddings = np.vstack(image_embeddings)
 
-st.title("🖼 Image Search with CLIP")
+st.title("Image Search with Query Image")
 uploaded_file = st.file_uploader("Upload a query image", type=["jpg","jpeg","png","webp"])
 
 top_k = 2

@@ -1,7 +1,8 @@
-streamlit==1.26.1
-pandas==2.1.1
-Pillow==10.1.0
-exifread==3.0.0
-pytesseract==0.4.2
-matplotlib==3.8.1
-langid==1.1.6
+streamlit
+pandas
+Pillow
+exifread
+pytesseract
+matplotlib
+numpy
+langid

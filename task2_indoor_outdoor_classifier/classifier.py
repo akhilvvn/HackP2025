@@ -193,7 +193,7 @@ def run_ui():
         uploaded_file = st.file_uploader("Upload an image", type=["jpg","jpeg","png","webp"])
         if uploaded_file is not None:
             image = Image.open(uploaded_file).convert("RGB")
-            st.image(image, caption="Uploaded Image", use_column_width=True)
+            st.image(image, caption="Uploaded Image", use_container_width=True)
             input_tensor = transform_test(image).unsqueeze(0).to(device)
             with torch.no_grad():
                 outputs = model(input_tensor)

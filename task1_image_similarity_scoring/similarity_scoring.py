@@ -182,15 +182,15 @@ def run_streamlit_ui():
         st.subheader("Side by Side Comparison")
         col1, col2 = st.columns(2)
         with col1:
-            st.image(original, caption="Original", use_column_width=True)
+            st.image(original, caption="Original", use_container_width=True)
         with col2:
-            st.image(altered, caption="Altered", use_column_width=True)
+            st.image(altered, caption="Altered", use_container_width=True)
             st.markdown(f"**pHash:** {colored_score(phash_score)}", unsafe_allow_html=True)
             st.markdown(f"**dHash:** {colored_score(dhash_score)}", unsafe_allow_html=True)
             st.markdown(f"**SSIM:** {colored_score(ssim_score)}", unsafe_allow_html=True)
             st.markdown(f"**ORB:** {colored_score(orb_score)}", unsafe_allow_html=True)
 
-        st.image(Image.fromarray(orb_vis), caption="ORB Match", use_column_width=True)
+        st.image(Image.fromarray(orb_vis), caption="ORB Match", use_container_width=True)
 
         st.subheader("Test Where They Fail / Strengths")
         summary = summarize_failures(st.session_state.results_cache)
