@@ -41,6 +41,7 @@ It is recommended to use a **virtual environment**.
 ```
 python3 -m venv venv
 source venv/bin/activate
+
 ```
 
 **On Windows**
@@ -48,6 +49,7 @@ source venv/bin/activate
 ```
 python -m venv venv
 .\venv\Scripts\activate
+
 ```
 
 # Install dependencies
@@ -59,6 +61,7 @@ pip install -r requirements.txt
 ## Usage
 
 Run the Streamlit app to upload a query image and get top matches:
+
 ```
 
 streamlit run image_search.py

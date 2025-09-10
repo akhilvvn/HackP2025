@@ -5,83 +5,130 @@ import numpy as np
 from PIL import Image
 import io
 import time
+from pathlib import Path
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-st.set_page_config(page_title="Object Segmentation & Human Blur")
+st.set_page_config(page_title="Object Segmentation & Human Blur", layout="wide")
 st.title("Object Segmentation & Human Blur")
 
 uploaded_files = st.file_uploader("Upload image(s)", type=["jpg", "jpeg", "png", "bmp", "tiff"], accept_multiple_files=True)
 detection_mode = st.selectbox("Detection mode", ["Full body", "Face only", "Both"])
 blur_style = st.selectbox("Blur style", ["Gaussian", "Pixelation"])
 blur_strength = st.slider("Blur strength", 5, 101, 25)
+max_workers = st.slider("Parallel tasks", 1, 8, 4)
 
-def pixelate_region(img, mask, blocks=10):
-    masked_img = img.copy()
-    ys, xs = np.where(mask)
-    if len(ys) == 0 or len(xs) == 0:
-        return img
-    y1, y2 = ys.min(), ys.max()
-    x1, x2 = xs.min(), xs.max()
-    roi = masked_img[y1:y2+1, x1:x2+1]
-    h, w = roi.shape[:2]
-    block_h = max(1, h // blocks)
-    block_w = max(1, w // blocks)
-    temp = cv2.resize(roi, (block_w, block_h), interpolation=cv2.INTER_LINEAR)
-    roi_pixelated = cv2.resize(temp, (w, h), interpolation=cv2.INTER_NEAREST)
-    roi_pixelated_masked = roi_pixelated.copy()
-    roi_pixelated_masked[~mask[y1:y2+1, x1:x2+1]] = roi[~mask[y1:y2+1, x1:x2+1]]
-    masked_img[y1:y2+1, x1:x2+1] = roi_pixelated_masked
-    return masked_img
-
-def detect_faces(img_array):
-    gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
-    mask = np.zeros(img_array.shape[:2], dtype=bool)
-    for (x, y, w, h) in faces:
-        mask[y:y+h, x:x+w] = True
-    return mask, len(faces)
+@st.cache_resource
+def load_models(mode):
+    body = YOLO("yolov8n-seg.pt") if mode in ["Full body", "Both"] else None
+    face = YOLO("yolov8n-face.pt") if mode in ["Face only", "Both"] else None
+    return body, face
 
 if uploaded_files:
-    model = YOLO("yolov8n-seg.pt") if detection_mode != "Face only" else None
-    for uploaded_file in uploaded_files:
-        image = Image.open(uploaded_file).convert("RGB")
+    with st.spinner("Loading models..."):
+        body_model, face_model = load_models(detection_mode)
+
+    def create_face_mask(shape, boxes):
+        mask = np.zeros(shape[:2], dtype=np.uint8)
+        for box in boxes:
+            x1, y1, x2, y2 = [int(round(float(v))) for v in box]
+            cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
+            axes = (max(1, (x2 - x1) // 2), max(1, (y2 - y1) // 2))
+            cv2.ellipse(mask, (int(cx), int(cy)), (int(axes[0]), int(axes[1])), 0, 0, 360, 1, -1)
+        return mask.astype(bool)
+
+    def gaussian(img, mask, ksize):
+        k = ksize if ksize % 2 == 1 else ksize + 1
+        blurred = cv2.GaussianBlur(img, (k, k), 0)
+        mask_3c = np.repeat(mask[:, :, np.newaxis], 3, axis=2)
+        out = img.copy()
+        out[mask_3c] = blurred[mask_3c]
+        return out
+
+    def pixelate(img, mask, blocks=10):
+        img_out = img.copy()
+        ys, xs = np.where(mask)
+        if len(ys) == 0:
+            return img_out
+        y1, y2 = int(ys.min()), int(ys.max())
+        x1, x2 = int(xs.min()), int(xs.max())
+        roi = img[y1:y2 + 1, x1:x2 + 1].copy()
+        h, w = roi.shape[:2]
+        down_w, down_h = max(1, w // blocks), max(1, h // blocks)
+        small = cv2.resize(roi, (down_w, down_h), interpolation=cv2.INTER_LINEAR)
+        pixelated = cv2.resize(small, (w, h), interpolation=cv2.INTER_NEAREST)
+        roi_mask = mask[y1:y2 + 1, x1:x2 + 1]
+        roi_mask_3c = np.repeat(roi_mask[:, :, np.newaxis], 3, axis=2)
+        roi[roi_mask_3c] = pixelated[roi_mask_3c]
+        img_out[y1:y2 + 1, x1:x2 + 1] = roi
+        return img_out
+
+    def process_file(uploaded_file):
+        file_bytes = uploaded_file.read()
+        image = Image.open(io.BytesIO(file_bytes)).convert("RGB")
         img_array = np.array(image)
+        img_out = img_array.copy()
+        human_count, face_count = 0, 0
         start_time = time.time()
-        human_count = 0
-        face_count = 0
         combined_mask = np.zeros(img_array.shape[:2], dtype=bool)
 
-        if detection_mode in ["Full body", "Both"]:
-            results = model(img_array)[0]
-            masks = results.masks
-            if masks is not None:
-                for mask, cls in zip(masks.data, results.boxes.cls):
-                    if int(cls) == 0:
-                        human_count += 1
-                        mask_resized = cv2.resize(mask.cpu().numpy().astype(np.uint8),
-                                                  (img_array.shape[1], img_array.shape[0]),
-                                                  interpolation=cv2.INTER_NEAREST)
-                        combined_mask |= mask_resized.astype(bool)
+        if body_model:
+            results = body_model(img_array)
+            if len(results):
+                r = results[0]
+                if hasattr(r, "masks") and r.masks is not None:
+                    masks = r.masks.data.cpu().numpy()
+                    classes = r.boxes.cls.cpu().numpy()
+                    for m, cls in zip(masks, classes):
+                        if int(cls) == 0:
+                            human_count += 1
+                            mask_resized = cv2.resize((m >= 0.5).astype(np.uint8), (img_array.shape[1], img_array.shape[0]), interpolation=cv2.INTER_NEAREST).astype(bool)
+                            combined_mask |= mask_resized
 
-        if detection_mode in ["Face only", "Both"]:
-            face_mask, faces_detected = detect_faces(img_array)
-            face_count = faces_detected
-            combined_mask |= face_mask
+        if face_model:
+            results_f = face_model(img_array)
+            if len(results_f):
+                r = results_f[0]
+                if hasattr(r, "boxes") and r.boxes is not None and len(r.boxes.xyxy):
+                    boxes = r.boxes.xyxy.cpu().numpy().reshape(-1, 4).tolist()
+                    face_count += len(boxes)
+                    face_mask = create_face_mask(img_array.shape, boxes)
+                    combined_mask |= face_mask
 
-        if np.any(combined_mask):
-            if blur_style == "Gaussian":
-                kernel_size = blur_strength if blur_strength % 2 == 1 else blur_strength + 1
-                blurred = cv2.GaussianBlur(img_array, (kernel_size, kernel_size), 0)
-                img_array[combined_mask] = blurred[combined_mask]
-            else:
-                img_array = pixelate_region(img_array, combined_mask, blocks=max(1, blur_strength // 2))
+        if blur_style == "Gaussian":
+            img_out = gaussian(img_out, combined_mask, blur_strength)
+        else:
+            blocks = max(1, blur_strength // 2)
+            img_out = pixelate(img_out, combined_mask, blocks)
 
-        end_time = time.time()
-        processing_time = round(end_time - start_time, 2)
-
-        st.write(f"**File:** {uploaded_file.name} | **Humans detected:** {human_count} | **Faces detected:** {face_count} | **Processing time:** {processing_time}s")
-        st.image([image, Image.fromarray(img_array)], width=300, caption=["Original", "Blurred"])
-
+        processing_time = round(time.time() - start_time, 2)
         buf = io.BytesIO()
-        Image.fromarray(img_array).save(buf, format="PNG")
-        st.download_button("Download Blurred Image", buf, file_name=f"blurred_{uploaded_file.name}", mime="image/png")
+        Image.fromarray(img_out).save(buf, format="PNG")
+        buf.seek(0)
+        return {
+            "name": uploaded_file.name,
+            "processed_pil": Image.fromarray(img_out),
+            "buf": buf,
+            "human_count": human_count,
+            "face_count": face_count,
+            "processing_time": processing_time
+        }
+
+    files = list(uploaded_files)
+    results = []
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = {executor.submit(process_file, f): f.name for f in files}
+        for fut in as_completed(futures):
+            try:
+                results.append(fut.result())
+            except Exception as e:
+                results.append({"name": futures[fut], "error": str(e)})
+
+    for res in results:
+        if "error" in res:
+            st.error(f"Error processing {res['name']}: {res['error']}")
+            continue
+        st.image(res["processed_pil"], caption=f"Blurred: {res['name']}", use_container_width=True)
+        st.markdown(f"**File:** {res['name']} | **Humans detected:** {res['human_count']} | **Faces detected:** {res['face_count']} | **Processing time:** {res['processing_time']}s")
+        download_name = f"{Path(res['name']).stem}_blurred.png"
+        st.download_button("Download Blurred Image", data=res["buf"], file_name=download_name, mime="image/png")
+
