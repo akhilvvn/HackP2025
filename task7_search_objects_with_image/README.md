@@ -26,11 +26,12 @@ HackP2025/
 │   ├── requirements.txt
 │   ├── app.py
 │   ├── object_search.py
-│   └── samples/
-│       └── dataset/            #~400 images
-│       └── sample_queries/     # optional query images
+│   ├── yolo11x.pt                # YOLOv11 weights
+│   ├── samples/
+│   │   ├── dataset/              # ~400 images
+│   │   └── sample_queries/       # sample query images
 │   └── outputs/
-│       └── dataset_objects/    # cached object crops and embeddings
+│       └── dataset_objects/      # cached object crops and embeddings
 
 ---
 
