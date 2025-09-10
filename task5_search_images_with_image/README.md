@@ -28,6 +28,7 @@ HackP2025/
 │   └── outputs/
 │       ├── results.csv     # top matches for each query
 │       └── previews/       # side-by-side preview images
+
 ---
 
 ## Installation
