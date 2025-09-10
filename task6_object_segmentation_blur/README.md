@@ -63,18 +63,18 @@ pip install -r requirements.txt
 This project uses **two YOLOv8 models**:
 
 1. **Full-body segmentation (`yolov8n-seg.pt`)**  
-   - Required for **Full Body** or **Hybrid** detection modes.  
-   - Must be downloaded manually (included in the repository).  
-   - [Download link from Ultralytics](https://github.com/ultralytics/ultralytics/releases/download/v8.0/yolov8n-seg.pt)
+   - Required for **Full Body** or **Dual** detection modes.  
+   - Automatically downloaded during initial run (included in the repository).  
+   - [Download link from Ultralytics](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolov8n-seg.pt)
 
 2. **Face detection (`yolov8n-face.pt`)**  
    - Required for **Face Only** or **Hybrid** detection modes.  
    - Must be downloaded manually (included in the repository).  
-   - [Download link](https://release-assets.githubusercontent.com/github-production-release-asset/726537896/774e6a09-ecf4-443a-a361-3d0debb0086f?sp=r&sv=2018-11-09&sr=b&spr=https&se=2025-09-10T18%3A52%3A30Z&rscd=attachment%3B+filename%3Dyolov8n-face-lindevs.pt&rsct=application%2Foctet-stream&skoid=96c2d410-5711-43a1-aedd-ab1947aa7ab0&sktid=398a6654-997b-47e9-b12b-9515b896b4de&skt=2025-09-10T17%3A52%3A21Z&ske=2025-09-10T18%3A52%3A30Z&sks=b&skv=2018-11-09&sig=mnj6sXjOD4Rnm9GjzwSu8L4%2FRJ%2BprLtO0sdDumTYTHI%3D&jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmVsZWFzZS1hc3NldHMuZ2l0aHVidXNlcmNvbnRlbnQuY29tIiwia2V5Ijoia2V5MSIsImV4cCI6MTc1NzUyODU5MywibmJmIjoxNzU3NTI4MjkzLCJwYXRoIjoicmVsZWFzZWFzc2V0cHJvZHVjdGlvbi5ibG9iLmNvcmUud2luZG93cy5uZXQifQ.7tR8dwIORG2XytK0pZq6Hv5yQOU14E0ji72RUO_cVvQ&response-content-disposition=attachment%3B%20filename%3Dyolov8n-face-lindevs.pt&response-content-type=application%2Foctet-stream)
+   - [Download link](https://github.com/lindevs/yolov8-face/releases/latest/download/yolov8n-face-lindevs.pt)
 
 > **Note:** The models are **already included in this repository** (`yolov8n-seg.pt` and `yolov8n-face.pt`).  
 
-> If you want the advanced versions, you can download them from the links above and place them in the same folder as `segment_and_blur.py`.
+> If you want more advanced versions, you can download them from the links above and place them in the same folder as `segment_and_blur.py`.
 
 ---
 
