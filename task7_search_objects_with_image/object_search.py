@@ -15,7 +15,7 @@ DEFAULT_THRESHOLD = 0.4
 os.makedirs(OBJECTS_DIR, exist_ok=True)
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-yolo_model = YOLO("yolo11x.pt")
+yolo_model = YOLO("yolo11l.pt")
 clip_model = SentenceTransformer("clip-ViT-B-32")
 
 dataset_embeddings_file = os.path.join(OBJECTS_DIR, "embeddings.pt")

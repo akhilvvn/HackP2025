@@ -1,9 +1,8 @@
 torch
 torchvision
+torchaudio
+pillow
 ultralytics
 sentence-transformers
-scikit-learn
+tqdm
 numpy
-pillow
-streamlit
-pandas

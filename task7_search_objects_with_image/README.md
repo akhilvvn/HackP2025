@@ -26,7 +26,7 @@ HackP2025/
 │   ├── requirements.txt
 │   ├── app.py
 │   ├── object_search.py
-│   ├── yolo11x.pt                # YOLOv11 weights
+│   ├── yolo11l.pt                # YOLOv11 weights
 │   ├── samples/
 │   │   ├── dataset/              # ~400 images
 │   │   └── sample_queries/       # sample query images
@@ -57,7 +57,7 @@ python -m venv venv
 
 ```
 
-# Install dependencies
+## Install dependencies
 
 pip install -r requirements.txt
 
@@ -65,21 +65,33 @@ pip install -r requirements.txt
 
 ## Key External Libraries and Models Used
 
-- **ultralytics (YOLO11x)** for object detection. The **YOLO11x model** weights are too large to host directly on GitHub (>100 MB). On the first run, the script will attempt to download the model automatically but if the download fails,
-  you can download the model directly from the link below and place the **yolo11x.pt** in the project root folder.
-
-  **Download Link:** [YOLO11x.pt](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x.pt)
-
+- **ultralytics (YOLO11x)** for object detection. 
 - **sentence-transformers (CLIP-ViT-B-32)** for embedding generation 
 - **torch / torchvision** for tensor operations and GPU support  
 - **Pillow** for image processing 
-- **tqdm** for progress bars 
 - **pandas** for CSV generation
+- **tqdm** for progress bars
 - **streamlit** for GUI
 
-**Note:** The **initial run may take several minutes** because:
+The original YOLO11x model weights are too large to host on GitHub (>100 MB). For convenience, this project uses the lighter YOLO11l weights, which can be hosted directly on GitHub without issues.
+If you prefer higher accuracy and want to use the full YOLO11x model, you can download it manually:
 
-1. YOLO11x object detection runs on every dataset image.
+**Download Link:** [YOLO11x.pt](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11x.pt)
+
+Place the file in the project root folder and update object_search.py:
+
+```
+# Change this line
+yolo_model = YOLO("yolo11l.pt")
+
+# To this line
+yolo_model = YOLO("yolo11x.pt")
+
+```
+
+**Note:** The initial run may take a while because:
+
+1. YOLO11 object detection runs on every dataset image.
   
 2. CLIP embeddings are computed for all detected objects.
  
@@ -90,8 +102,8 @@ pip install -r requirements.txt
 ## Usage
 
 Run the Streamlit app to upload query images and retrieve matching images from the dataset:
-```
 
+```
 streamlit run app.py
 
 ```
