@@ -83,7 +83,7 @@ streamlit run similarity_scoring.py streamlit
 
 **Outputs:** outputs/scores.csv, outputs/scores_full.csv, outputs/orb_matches/
 
-**Dependencies)**: Pillow, imagehash, scikit-image, opencv-python, matplotlib, numpy, pandas, streamlit, faiss-cpu, torch, torchvision, transformers
+**Dependencies**: Pillow, imagehash, scikit-image, opencv-python, matplotlib, numpy, pandas, streamlit, faiss-cpu, torch, torchvision, transformers
 
 #### 2. Indoor/Outdoor Image Classifier
 
@@ -307,7 +307,7 @@ Frontend runs at: http://localhost:5173 by default.
 
 **Frontend deps (from package.json):** axios, konva, react, react-dom, react-dropzone, react-icons, react-konva, use-image
 
-Dev: @vitejs/plugin-react, vite
+**Dev:** @vitejs/plugin-react, vite
 
 **Note:** YOLO weights (yolov8l.pt) are located in the backend folder for server-side AI-assisted detection. Ultralytics will auto-download on first run if missing.
 
